@@ -4,19 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>儀表板 - 物流倉儲管理系統</title>
+    <!--Bootstrap 官方提供(包含主色調藍色、圓角設計、字體、柵格排版)-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+ <!--背景-淺灰白Light Color-->
 <body class="bg-light">
-     <!--------針對畫面右上角設計----------->
+    
+     <!--針對畫面右上角設計-->
+
+     <!--最上方黑條設計(navbar=Bootstrap導航列元件自動排列、navbar-dark字變白色、bg背景色、shadow-sm陰影)-->
     <nav class="navbar navbar-dark bg-dark shadow-sm">
+
+        <!--螢幕寬度填滿-->
         <div class="container-fluid">
-            
+
+            <!-- navbar-brand=Bootstrap專門給Logo用的樣式 -->
             <a class="navbar-brand" href="#">
+
+                 <!--fas fa-boxes = 圖案、me = 間距-->
                 <i class="fas fa-boxes me-2"></i>物流倉儲管理系統
             </a>
 
+            <!-- 更改屬性、水平排列、垂直排列、靠右對齊 -->
             <div class="d-flex flex-row align-items-center ms-auto">
 
                 <a class="nav-link text-white me-3" href="product.html">
@@ -35,6 +46,7 @@
                     <i class="fas fa-users me-1"></i>客戶
                 </a>
 
+                <!-- 中間加個槓 -->
                 <span class="text-secondary mx-2">|</span>
 
                 <a class="nav-link text-warning me-3" href="Purchaseorder.html">
@@ -54,13 +66,13 @@
             </div>
         </div>
     </nav>
-    <!--------------------------------------->
     
-    <!------------營運概況總覽設計------------>
+    <!--營運概況總覽設計-->
     <div class="container mt-4">
+
+        <!-- 參考30行 -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2><i class="fas fa-chart-line me-2"></i>營運總覽</h2>
-            <div class="text-muted">資料時間: 2025/12/11</div>
         </div>
 
         <div class="row g-3 mb-4">
@@ -84,7 +96,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <h6 class="card-title">待處理訂單</h6>
-                                <h2 class="display-6 fw-bold">12</h2>
+                                <h2 class="display-6 fw-bold">4</h2>
                             </div>
                             <i class="fas fa-clipboard-list fa-3x opacity-50"></i>
                         </div>
@@ -102,8 +114,7 @@
                             </div>
                             <i class="fas fa-exclamation-triangle fa-3x opacity-50"></i>
                         </div>
-                        <small>有 5 項商品低於安全水位</small>
-                    </div>
+                        </div>
                 </div>
             </div>
 
@@ -121,7 +132,6 @@
                 </div>
             </div>
         </div>
-        <!------------------------------------->
 
         <div class="row mb-4">
             <div class="col-lg-8">
@@ -135,6 +145,7 @@
                 </div>
             </div>
 
+            <!--快速作業-->
             <div class="col-lg-4">
                 <div class="card shadow-sm h-100">
                     <div class="card-header bg-white">
@@ -155,10 +166,12 @@
             </div>
         </div>
 
+        <!--近期訂單狀態-->
         <div class="card shadow-sm">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <span><i class="fas fa-list me-1"></i> 近期訂單狀態</span>
-                <button class="btn btn-sm btn-primary">查看全部</button>
+                
+                <a href="order.html" class="btn btn-sm btn-primary">查看全部</a>
             </div>
             <div class="card-body p-0">
                 <table class="table table-striped table-hover mb-0 align-middle">
@@ -169,29 +182,30 @@
                             <th>日期</th>
                             <th>狀態</th>
                             <th>金額</th>
-                            <th>操作</th>
-                        </tr>
+                            </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>#ORD-2025001</td> <td>王小明</td>         <td>2025-12-11</td>     <td><span class="badge bg-warning text-dark">處理中</span></td> <td>$1,500</td>         <td><button class="btn btn-sm btn-outline-info">詳情</button></td>
-                        </tr>
+                            <td>#ORD-2025001</td> 
+                            <td>王小明</td>         
+                            <td>2025-12-11</td>     
+                            <td><span class="badge bg-warning text-dark">處理中</span></td> 
+                            <td>$1,500</td>        
+                            </tr>
                         <tr>
                             <td>#ORD-2025002</td>
                             <td>陳大文</td>
                             <td>2025-12-10</td>
                             <td><span class="badge bg-success">已出貨</span></td>
                             <td>$3,200</td>
-                            <td><button class="btn btn-sm btn-outline-info">詳情</button></td>
-                        </tr>
+                            </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
 
     <footer class="text-center text-muted py-4 mt-4">
-        <small>&copy; 2025 Warehouse Management System</small>
+        <small>&copy; 老師我想過 Warehouse Management System</small>
     </footer>
 
     <script>
@@ -200,7 +214,7 @@
             type: 'bar',
             data: {
                 // 將 labels 替換成從資料庫撈出的倉庫名稱列表
-                labels: ['台北一倉', '桃園二倉', '高雄三倉', '台中轉運站'], 
+                labels: ['台北倉', '桃園倉', '高雄倉', '台中倉'], 
                 datasets: [{
                     label: '目前庫存量 (件)',
                     //將 data 替換成對應的庫存數量列表
