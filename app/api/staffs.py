@@ -6,6 +6,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from app.schemas.staff import Staff as StaffSchema, StaffCreate
 from app.models.staff import Staff as StaffModel
 from app.core.database import get_db
+from sqlalchemy.exc import IntegrityError
 
 router = APIRouter(prefix="/staff", tags=["Staff"])
 
@@ -69,6 +70,15 @@ async def delete_staff(staff_id: int, db: AsyncSession = Depends(get_db)):
     if not db_staff:
         raise HTTPException(status_code=404, detail="Staff not found")
         
-    await db.delete(db_staff)
-    await db.commit()
+    try:
+        await db.delete(db_staff)
+        await db.commit()
+    except IntegrityError:
+        # 捕捉資料庫的關聯錯誤 (Foreign Key Violation)
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, 
+            detail="無法刪除：該員工有正在經手的單據 (如進貨單、領料單)。"
+        )
+    
     return None
