@@ -35,7 +35,7 @@ def login():
         password = request.form.get('password')
         
         # 驗證帳號密碼 (Admin / student)
-        if username == 'Admin' and password == 'student':
+        if username == 'Admin' and password == '0000':
             session['user'] = username  # 登入成功，將使用者存入 session
             return redirect(url_for('product_page')) # 跳轉到商品頁
         else:
