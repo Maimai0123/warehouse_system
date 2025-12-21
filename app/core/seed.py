@@ -1,5 +1,5 @@
 from datetime import date
-from sqlmodel import select
+from sqlmodel import select, text
 from sqlmodel.ext.asyncio.session import AsyncSession
 from app.models.product import Product
 from app.models.staff import Staff
@@ -38,7 +38,7 @@ INITIAL_WAREHOUSES = [
 # --- Seed InboundOrder ---
 INITIAL_INBOUNDS = [
     {
-        "InboundID": 2023120101, "ioDate": date(2023, 12, 1), "SupplierID": 1, "StaffID": 2,
+        "InboundID": 1, "ioDate": date(2025, 12, 1), "SupplierID": 1, "StaffID": 2,
         "details": [
             {"ProductID": 1, "idQuantity": 50, "WarehouseID": 101},
             {"ProductID": 2, "idQuantity": 20, "WarehouseID": 101},
@@ -49,7 +49,7 @@ INITIAL_INBOUNDS = [
 # --- Seed Requisition ---
 INITIAL_REQUISITIONS = [
     {
-        "ReqID": 2023120201, "reDate": date(2023, 12, 2), "reReason": "產線領料", "StaffID": 2,
+        "ReqID": 1, "reDate": date(2025, 12, 2), "reReason": "產線領料", "StaffID": 2,
         "details": [
             {"ProductID": 1, "rdQuantity": 10, "WarehouseID": 101},
             {"ProductID": 2, "rdQuantity": 5, "WarehouseID": 101},
@@ -128,3 +128,29 @@ async def create_initial_data(db: AsyncSession):
                 db.add(detail)
         
         await db.commit()
+
+    try:
+        # 1. 重置 Staff
+        await db.exec(text("SELECT setval(pg_get_serial_sequence('staff', 'StaffID'), (SELECT MAX(\"StaffID\") FROM staff));"))
+        
+        # 2. 重置 Supplier
+        await db.exec(text("SELECT setval(pg_get_serial_sequence('supplier', 'SupplierID'), (SELECT MAX(\"SupplierID\") FROM supplier));"))
+        
+        # 3. 重置 Product
+        await db.exec(text("SELECT setval(pg_get_serial_sequence('product', 'ProductID'), (SELECT MAX(\"ProductID\") FROM product));"))
+
+        # 4. 重置 Warehouse
+        await db.exec(text("SELECT setval(pg_get_serial_sequence('warehouse', 'WarehouseID'), (SELECT MAX(\"WarehouseID\") FROM warehouse));"))
+
+        # 5. 重置 InboundOrder
+        await db.exec(text("SELECT setval(pg_get_serial_sequence('inboundorder', 'InboundID'), (SELECT MAX(\"InboundID\") FROM inboundorder));"))
+        
+        # 6. 重置 Requisition
+        await db.exec(text("SELECT setval(pg_get_serial_sequence('requisition', 'ReqID'), (SELECT MAX(\"ReqID\") FROM requisition));"))
+
+        # 🔥 關鍵修正：必須 Commit 才會生效！
+        await db.commit() 
+        print("🔄 PostgreSQL Sequences have been reset.")
+        
+    except Exception as e:
+        print(f"ℹ️ Sequence reset skipped: {e}")
