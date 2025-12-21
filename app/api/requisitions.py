@@ -5,13 +5,13 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import selectinload # 用於預加載關聯
 
-from app.schemas.requisition import Requisition as RequisitionSchema, RequisitionCreate
+from app.schemas.requisition import Requisition as RequisitionSchema, RequisitionCreate, RequisitionRead
 from app.models.requisition import Requisition, ReqDetail
 from app.core.database import get_db
 
 router = APIRouter(prefix="/requisitions", tags=["Requisitions"])
 
-@router.get("/", response_model=List[RequisitionSchema])
+@router.get("/", response_model=List[RequisitionRead])
 async def get_requisitions(
     re_date: Optional[date] = Query(None, description="篩選領料日期"),
     q: Optional[str] = Query(None, description="搜尋單號或領料原因"),
@@ -43,7 +43,7 @@ async def get_requisitions(
     result = await db.exec(statement)
     return result.all()
 
-@router.get("/{req_id}", response_model=RequisitionSchema)
+@router.get("/{req_id}", response_model=RequisitionRead)
 async def get_requisition(req_id: int, db: AsyncSession = Depends(get_db)):
     statement = select(Requisition).where(Requisition.ReqID == req_id).options(
         selectinload(Requisition.details).options(
@@ -52,7 +52,7 @@ async def get_requisition(req_id: int, db: AsyncSession = Depends(get_db)):
         ),
         selectinload(Requisition.staff)
     )
-    
+
     result = await db.exec(statement)
     req = result.first()
     

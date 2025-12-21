@@ -5,13 +5,13 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.schemas.inboundorder import InboundOrder as InboundOrderSchema, InboundOrderCreate
+from app.schemas.inboundorder import InboundOrder as InboundOrderSchema, InboundOrderCreate, InboundOrderRead
 from app.models.inbound_order import InboundOrder, InboundDetail
 from app.core.database import get_db
 
 router = APIRouter(prefix="/inbound", tags=["Inbound Orders"])
 
-@router.get("/", response_model=List[InboundOrderSchema])
+@router.get("/", response_model=List[InboundOrderRead])
 async def get_inbound_orders(
     io_date: Optional[date] = Query(None, description="篩選進貨日期"),
     skip: int = Query(0, ge=0),
@@ -38,7 +38,7 @@ async def get_inbound_orders(
     result = await db.exec(statement)
     return result.all()
 
-@router.get("/{inbound_id}", response_model=InboundOrderSchema)
+@router.get("/{inbound_id}", response_model=InboundOrderRead)
 async def get_inbound_order(inbound_id: int, db: AsyncSession = Depends(get_db)):
     statement = select(InboundOrder).where(InboundOrder.InboundID == inbound_id).options(
         selectinload(InboundOrder.details).options(
@@ -48,7 +48,7 @@ async def get_inbound_order(inbound_id: int, db: AsyncSession = Depends(get_db))
         selectinload(InboundOrder.supplier),
         selectinload(InboundOrder.staff)
     )
-    
+
     result = await db.exec(statement)
     order = result.first()
     
