@@ -11,10 +11,11 @@
 0. 打開終端機
 1. 安裝 uv (若尚未安裝): `curl -LsSf https://astral.sh/uv/install.sh | sh`
 2. 到專案目錄下
-3. 建立虛擬環境(若尚未建立) `uv venv`
-4. 激活虛擬環境 `source ./.venv/bin/activate`
-5. 同步依賴: `uv sync`
-6. 啟動伺服器: `uv run uvicorn app.main:app --reload`
+3. 複製配置檔 `cp .env.example .env`
+4. 建立虛擬環境(若尚未建立) `uv venv`
+5. 激活虛擬環境 `source ./.venv/bin/activate`
+6. 同步依賴: `uv sync`
+7. 啟動伺服器: `uv run uvicorn app.main:app --reload`
 
 ## 更新
 0. 打開終端機
