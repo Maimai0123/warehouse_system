@@ -5,12 +5,26 @@ from app.api import products, requisitions, staffs, suppliers, inboundorders, wa
 
 from contextlib import asynccontextmanager
 from app.models import Staff
-from app.core.database import init_db
+from app.models import Supplier
+from app.core.database import init_db, get_db_session_context
+from app.core.seed import create_initial_data
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # 啟動時建立資料庫 Tables (SQLModel)
     await init_db()
+
+    is_need_seed = True
+    if is_need_seed:
+        from app.core.database import engine
+        from sqlmodel.ext.asyncio.session import AsyncSession
+        from sqlalchemy.orm import sessionmaker
+        
+        async_session = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+        
+        async with async_session() as session:
+            await create_initial_data(session)
+
     yield
 
 app = FastAPI(title="物流倉儲管理系統 API", version="1.0.0", lifespan=lifespan)
